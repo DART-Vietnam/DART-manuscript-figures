@@ -28,12 +28,15 @@ path_e=''#Path where the observational datasets are included
 data_corr_s = xr.open_dataset("data_corr_s_github.nc", decode_timedelta=True)
 data_uncorr_s = xr.open_dataset("data_uncorr_s_github.nc", decode_timedelta=True)
 
+# load of weekly observational data 
+
+era_week1 = xr.open_dataset("era_week1_south_github.nc")
+era_week2 = xr.open_dataset("era_week2_south_github.nc")
+
 # We set up the variables to process
 variables_to_process = ["t2m", "r", "tp"]
 
-
 # First we need a xarray with which we can measure the climatology
-
 
 def calculate_climatology_multi_var(initial_year,final_year,ensemble_data, observations, variables=["t2m", "r", "tp"]):
     """Calculate climatology for multiple variables and all ensemble time steps. 
@@ -77,7 +80,7 @@ def calculate_climatology_multi_var(initial_year,final_year,ensemble_data, obser
         matching_positions = np.where(
             (era_ranks.time.dt.day == day) & 
             (era_ranks.time.dt.month == month) & 
-            (era_ranks.time.dt.year > 2003) & 
+            (era_ranks.time.dt.year > 2003) & #This is because in our sample data, re-forecast data does not go below 2003
             (era_ranks.time.dt.year != year)
         )[0]
         
@@ -137,21 +140,17 @@ observations["tp"] = observations["tp"] * 1000  # Convert to mm
 variables_to_process = ["t2m", "r", "tp"]
 
 ensemble_data = data_corr_s.sel(step="7.days")
-climatology1 = calculate_climatology_multi_var(2004,2020,ensemble_data, observations, variables_to_process)
+climatology1 = calculate_climatology_multi_var(2004,2020,ensemble_data, observations, variables_to_process).sel(lon=slice(104.25, 107.5), lat=slice(12, 8.5))
 
 #Climatology of the second forecasting week
 
 ensemble_data = data_corr_s.sel(step="14.days")
-climatology2 = calculate_climatology_multi_var(2004,2020,ensemble_data, observations, variables_to_process)
-
-
+climatology2 = calculate_climatology_multi_var(2004,2020,ensemble_data, observations, variables_to_process).sel(lon=slice(104.25, 107.5), lat=slice(12, 8.5))
 
 # Join climatological datasets inbto 1 
-climatology_data = [climatology1.sel(lon=slice(104.25, 107.5), lat=slice(12, 8.5)), climatology2.sel(lon=slice(104.25, 107.5), lat=slice(12, 8.5))]
+climatology_data = [climatology1, climatology2]
 
-# After defining climatology we can get the ACC maps 
-
-
+#Now we can measure the ACC maps 
 
 def calculate_acc_maps(data_corrected, data_uncorrected, era_week1, era_week2, climatology_datasets,p_value=0.05):
     """
