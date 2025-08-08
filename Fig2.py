@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from PIL import Image
-
+import os
 data_corr_s = xr.open_dataset("data_corr_s_github.nc", decode_timedelta=True)
 data_uncorr_s = xr.open_dataset("data_uncorr_s_github.nc", decode_timedelta=True)
 
@@ -25,7 +25,7 @@ def plot_bias_maps(data, suffix):
             "label": "(a)",
             "var_key": "t2m",
         },
-        "R": {
+        "r": {
             "levels": np.arange(-10, 10.1, 1),
             "unit": "%",
             "label": "(b)",
@@ -163,10 +163,20 @@ def concatenate_images(suffix):
     result.save(f"bias_{suffix}.tiff")
 
 
-# Execute for both corrected and uncorrected data
+# Create bias map corrected and uncorrected data
 plot_bias_maps(data_corr_s, "corr")
 plot_bias_maps(data_uncorr_s, "uncorr")
 
 # Concatenate images
 concatenate_images("corr")
 concatenate_images("uncorr")
+
+#Deleting intermediate images
+os.remove("bias_T2M_corr.tiff")
+os.remove("bias_r_corr.tiff")
+os.remove("bias_TP_corr.tiff")
+
+
+os.remove("bias_T2M_corr.tiff")
+os.remove("bias_r_corr.tiff")
+os.remove("bias_TP_corr.tiff")
