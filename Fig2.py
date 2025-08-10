@@ -1,11 +1,15 @@
 # Code to make fig 2 (bias between corrected and uncorrected data
+import os
+from pathlib import Path
 import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from PIL import Image
-import os
+
+OUTPUT = ["bias_corr.tiff", "bias_uncorr.tiff"]
+
 data_corr_s = xr.open_dataset("data_corr_s_github.nc", decode_timedelta=True)
 data_uncorr_s = xr.open_dataset("data_uncorr_s_github.nc", decode_timedelta=True)
 
@@ -171,12 +175,7 @@ plot_bias_maps(data_uncorr_s, "uncorr")
 concatenate_images("corr")
 concatenate_images("uncorr")
 
-#Deleting intermediate images
-os.remove("bias_T2M_corr.tiff")
-os.remove("bias_r_corr.tiff")
-os.remove("bias_TP_corr.tiff")
-
-
-os.remove("bias_T2M_corr.tiff")
-os.remove("bias_r_corr.tiff")
-os.remove("bias_TP_corr.tiff")
+print("Cleaning up intermediate files ...")
+for p in Path.cwd().glob("bias*.tiff"):
+    if p.name not in OUTPUT:
+        os.unlink(p)
