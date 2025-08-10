@@ -30,6 +30,6 @@ case "$FIG" in
         uv run python Fig2.py
         ;;
     "3")
-        echo not yet implemented
+        uv run python Fig3.py
         ;;
 esac
