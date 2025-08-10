@@ -146,7 +146,7 @@ def concatenate_images(suffix):
     """Concatenate bias images vertically."""
 
     # Load images
-    images = [Image.open(f"bias_{var}_S_{suffix}.tiff") for var in ["T2m", "R", "TP"]]
+    images = [Image.open(f"bias_{var}_S_{suffix}.tiff") for var in ["T2m", "r", "TP"]]
 
     # Concatenate vertically
     def concat_v(im1, im2):
