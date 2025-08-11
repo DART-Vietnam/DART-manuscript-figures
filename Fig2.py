@@ -8,7 +8,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from PIL import Image
 
-OUTPUT = ["bias_corr.tiff", "bias_uncorr.tiff"]
+OUTPUT = ["Fig2.tiff"]
 
 data_corr_s = xr.open_dataset("data_corr_s_github.nc", decode_timedelta=True)
 data_uncorr_s = xr.open_dataset("data_uncorr_s_github.nc", decode_timedelta=True)
@@ -186,10 +186,10 @@ concatenate_images("uncorr")
 
 im_f2,im_f1= Image.open("bias_uncorr.tiff"),Image.open("bias_corr.tiff")
 
-get_concat_h(im_f2,im_f1).save('Fig_2_aggregation.tiff')
+get_concat_h(im_f2,im_f1).save('Fig2.tiff')
 
 
 print("Cleaning up intermediate files ...")
-for p in Path.cwd().glob("bias*.tiff"):
+for p in Path.cwd().glob("*.tiff"):
     if p.name not in OUTPUT:
         os.unlink(p)
