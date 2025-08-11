@@ -20,25 +20,28 @@ era_week2 = xr.open_dataset("era_week2_south_github.nc")
 # The 4 datasets should have the same lat and lon extension
 def plot_bias_maps(data, suffix):
     """Plot bias maps"""
-
+    if suffix =="corr":
+     labels=["(a)","(b)","(c)"]
+    else:
+     labels=["(d)","(e)","(f)"]
     # Levels for representing variables
     variables = {
         "T2m": {
             "levels": np.arange(-2, 2.5, 0.5),
             "unit": "°C",
-            "label": "(a)",
+            "label": labels[0],
             "var_key": "t2m",
         },
         "r": {
             "levels": np.arange(-10, 10.1, 1),
             "unit": "%",
-            "label": "(b)",
+            "label": labels[1],
             "var_key": "r",
         },
         "TP": {
             "levels": np.arange(-20, 21, 1),
             "unit": "mm",
-            "label": "(c)",
+            "label": labels[2],
             "var_key": "tp",
         },
     }
@@ -116,7 +119,10 @@ def plot_bias_maps(data, suffix):
             # Add titles and labels
             if var_name == "T2m":
                 ax.set_title(lead_labels[i], fontsize=fontsize - 8)
-
+                if suffix == "corr" and i==0:
+                 ax.text(104.2, 13, 'Bias between corrected forecast and ERA5', fontsize=fontsize-6)
+                elif suffix == "uncorr" and i==0:   
+                 ax.text(104.2, 13, 'Bias between raw forecast and ERA5', fontsize=fontsize-6)
             if i == 0:
                 ax.text(
                     103,
