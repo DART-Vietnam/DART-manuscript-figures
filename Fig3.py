@@ -9,7 +9,7 @@ from scipy.stats import pearsonr
 import xarray as xr
 
 
-path_e = ""  # Path where the observational datasets are included
+path_e = "."  # Path where the observational datasets are included
 
 # In this script we will measure the anomaly correlation coefficient.
 
@@ -408,7 +408,7 @@ def calculate_acc_maps(
     return fig
 
 
-observations = path_e + "/T2m_r_tp_Vietnam_ERA5v2.nc"  #
+observations = xr.open_dataset(path_e + "/T2m_r_tp_Vietnam_ERA5v2.nc")  #
 
 # Calculate climatology for all variables
 variables_to_process = ["t2m", "r", "tp"]
@@ -421,6 +421,8 @@ ensemble_data = data_corr_s.sel(step="14.days")
 climatology2 = calculate_climatology_multi_var(
     2004, 2020, ensemble_data, observations, variables_to_process
 )
+assert climatology1 is not None
+assert climatology2 is not None
 
 
 # Measure climatology for the two weeks
@@ -432,4 +434,5 @@ climatology_data = [
 
 fig = calculate_acc_maps(
     data_corr_s, data_uncorr_s, era_week1, era_week2, climatology_data
-)  # plt.savefig("Figures_paper/Fig_3_Aggregation.tiff", dpi=600)
+)
+plt.savefig("Fig3.tiff", dpi=600)
