@@ -1,4 +1,4 @@
-# DART-Pipeline manuscript
+# DART manuscript figures
 
 Code to obtain Figs 2 and 3 of DART-Pipeline mansucript.
 
