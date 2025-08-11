@@ -408,7 +408,7 @@ def calculate_acc_maps(
     return fig
 
 
-observations = path_e + "/Daily_mean_ERA5_sh_rh.nc"  #
+observations = path_e + "/T2m_r_tp_Vietnam_ERA5v2.nc"  #
 
 # Calculate climatology for all variables
 variables_to_process = ["t2m", "r", "tp"]
