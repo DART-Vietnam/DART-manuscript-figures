@@ -129,7 +129,7 @@ def calculate_climatology_multi_var(
         return None
 
 
-observations = xr.open_dataset(path_e + "/Daily_mean_ERA5_sh_rh.nc")
+observations = xr.open_dataset(path_e + "/T2m_r_tp_Vietnam_ERA5v2.nc") # This file is available at zenodo https://zenodo.org/badge/DOI/10.5281/zenodo.15487563.svg
 
 observations["t2m"] = observations["t2m"] - 273.15  # Convert to Celsius
 observations["tp"] = observations["tp"] * 1000  # Convert to mm
