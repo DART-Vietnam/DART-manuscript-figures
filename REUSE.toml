@@ -1,0 +1,7 @@
+version = 1
+
+[[annotations]]
+path = ["era_week1_south_github.nc", "era_week2_south_github.nc"]
+SPDX-FileComment = "ERA5 reanalysis data for South Vietnam"
+SPDX-License-Identifier = "CC-BY-4.0"
+SPDX-FileAttributionText = "Generated using Copernicus Climate Change Service information [2025]"
