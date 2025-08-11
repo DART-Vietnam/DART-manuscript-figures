@@ -166,6 +166,13 @@ def concatenate_images(suffix):
 
     result.save(f"bias_{suffix}.tiff")
 
+def get_concat_h(im1, im2):
+    "Concatenate images horizontally"
+    dst = Image.new('RGB', (im1.width + im2.width, im1.height))
+    dst.paste(im1, (0, 0))
+    dst.paste(im2, (im1.width, 0))
+    return dst
+
 
 # Create bias map corrected and uncorrected data
 plot_bias_maps(data_corr_s, "corr")
@@ -174,6 +181,13 @@ plot_bias_maps(data_uncorr_s, "uncorr")
 # Concatenate images
 concatenate_images("corr")
 concatenate_images("uncorr")
+
+#Concatenate bias and uncorrected bias into 1 figure and saving it into tiff 
+
+im_f2,im_f1= Image.open("bias_uncorr.tiff"),Image.open("bias_corr.tiff")
+
+get_concat_h(im_f2,im_f1).save('Fig_2_aggregation.tiff')
+
 
 print("Cleaning up intermediate files ...")
 for p in Path.cwd().glob("bias*.tiff"):
