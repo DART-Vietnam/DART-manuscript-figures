@@ -8,6 +8,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from PIL import Image
 
+DPI=300
 OUTPUT = ["Fig2.tiff"]
 
 data_corr_s = xr.open_dataset("data_corr_s_github.nc", decode_timedelta=True)
@@ -20,10 +21,10 @@ era_week2 = xr.open_dataset("era_week2_south_github.nc")
 # The 4 datasets should have the same lat and lon extension
 def plot_bias_maps(data, suffix):
     """Plot bias maps"""
-    if suffix =="corr":
-     labels=["(a)","(b)","(c)"]
+    if suffix == "uncorr":
+        labels = ["(a)", "(b)", "(c)"]
     else:
-     labels=["(d)","(e)","(f)"]
+        labels = ["(d)", "(e)", "(f)"]
     # Levels for representing variables
     variables = {
         "T2m": {
@@ -119,10 +120,20 @@ def plot_bias_maps(data, suffix):
             # Add titles and labels
             if var_name == "T2m":
                 ax.set_title(lead_labels[i], fontsize=fontsize - 8)
-                if suffix == "corr" and i==0:
-                 ax.text(104.2, 13, 'Bias between corrected forecast and ERA5', fontsize=fontsize-6)
-                elif suffix == "uncorr" and i==0:   
-                 ax.text(104.2, 13, 'Bias between raw forecast and ERA5', fontsize=fontsize-6)
+                if suffix == "corr" and i == 0:
+                    ax.text(
+                        104.2,
+                        13,
+                        "Bias between corrected forecast and ERA5",
+                        fontsize=fontsize - 6,
+                    )
+                elif suffix == "uncorr" and i == 0:
+                    ax.text(
+                        104.2,
+                        13,
+                        "Bias between raw forecast and ERA5",
+                        fontsize=fontsize - 6,
+                    )
             if i == 0:
                 ax.text(
                     103,
@@ -149,7 +160,7 @@ def plot_bias_maps(data, suffix):
         cbar.set_label(config["unit"], rotation=0)
 
         # Save figure
-        plt.savefig(f"bias_{var_name}_S_{suffix}.tiff", dpi=600)
+        plt.savefig(f"bias_{var_name}_S_{suffix}.tiff", dpi=DPI)
 
 
 def concatenate_images(suffix):
@@ -172,9 +183,10 @@ def concatenate_images(suffix):
 
     result.save(f"bias_{suffix}.tiff")
 
+
 def get_concat_h(im1, im2):
     "Concatenate images horizontally"
-    dst = Image.new('RGB', (im1.width + im2.width, im1.height))
+    dst = Image.new("RGB", (im1.width + im2.width, im1.height))
     dst.paste(im1, (0, 0))
     dst.paste(im2, (im1.width, 0))
     return dst
@@ -188,11 +200,11 @@ plot_bias_maps(data_uncorr_s, "uncorr")
 concatenate_images("corr")
 concatenate_images("uncorr")
 
-#Concatenate bias and uncorrected bias into 1 figure and saving it into tiff 
+# Concatenate bias and uncorrected bias into 1 figure and saving it into tiff
 
-im_f2,im_f1= Image.open("bias_uncorr.tiff"),Image.open("bias_corr.tiff")
+im_f2, im_f1 = Image.open("bias_uncorr.tiff"), Image.open("bias_corr.tiff")
 
-get_concat_h(im_f2,im_f1).save('Fig2.tiff')
+get_concat_h(im_f2, im_f1).save("Fig2.tiff")
 
 
 print("Cleaning up intermediate files ...")

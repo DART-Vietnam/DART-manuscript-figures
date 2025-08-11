@@ -8,6 +8,7 @@ import pandas as pd
 from scipy.stats import pearsonr
 import xarray as xr
 
+DPI=300
 
 path_e = "."  # Path where the observational datasets are included
 
@@ -28,6 +29,10 @@ variables_to_process = ["t2m", "r", "tp"]
 
 # First we need a xarray with which we can measure the climatology
 
+
+def read_obs() -> xr.Dataset:
+    ds = xr.open_dataset(path_e + "/T2m_r_tp_Vietnam_ERA5v2.nc")
+    return ds.rename({"rh": "r"})
 
 def calculate_climatology_multi_var(
     initial_year, final_year, ensemble_data, observations, variables=["t2m", "r", "tp"]
@@ -129,7 +134,7 @@ def calculate_climatology_multi_var(
         return None
 
 
-observations = xr.open_dataset(path_e + "/T2m_r_tp_Vietnam_ERA5v2.nc") # This file is available at zenodo https://zenodo.org/badge/DOI/10.5281/zenodo.15487563.svg
+observations = read_obs()
 
 observations["t2m"] = observations["t2m"] - 273.15  # Convert to Celsius
 observations["tp"] = observations["tp"] * 1000  # Convert to mm
@@ -408,7 +413,7 @@ def calculate_acc_maps(
     return fig
 
 
-observations = xr.open_dataset(path_e + "/T2m_r_tp_Vietnam_ERA5v2.nc")  #
+observations = read_obs()
 
 # Calculate climatology for all variables
 variables_to_process = ["t2m", "r", "tp"]
@@ -435,4 +440,4 @@ climatology_data = [
 fig = calculate_acc_maps(
     data_corr_s, data_uncorr_s, era_week1, era_week2, climatology_data
 )
-plt.savefig("Fig3.tiff", dpi=600)
+plt.savefig("Fig3.tiff", dpi=DPI)
