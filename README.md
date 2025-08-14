@@ -12,8 +12,11 @@ To generate a figure, clone this repository and
 ```
 
 > [!NOTE]
-> Availability of `data_*.nc` files are restricted due to license, please
-> contact DART-Pipeline authors to get access. We provide the
+> Availability of `data_*.nc` files are restricted due to license,
+> please contact DART-Pipeline authors to get access. We provide the
 > [checksums](SHA256SUMS.txt) of all netCDF source files for reproducibility
 > purposes.
+>
+> Availability of dengue incidence data is restricted due to data sharing
+> restrictions.
 
