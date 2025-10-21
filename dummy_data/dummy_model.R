@@ -115,7 +115,7 @@ test_ts_df <- weekly_inc_weather %>%
   as_tsibble(key = region, index = date)
 
 sarimax_results <- train_ts_df %>%
-  model(sarimax = ARIMA(log1p(n) ~ lag(t2m, 4) + lag(tp, 4) + lag(r, 4)))
+  model(sarimax = ARIMA(log1p(n) ~ t2m + tp + r))
 
 sarimax_results %>% filter(region == "VNM.25.10_1") %>% report()
 
