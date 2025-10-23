@@ -3,6 +3,7 @@ library(stars)
 library(worcs)
 library(fable)
 library(tsibble)
+library(patchwork)
 
 # Data ingestion
 ## Read GID lookup dataframe
@@ -122,10 +123,9 @@ sarimax_results %>% filter(region == "VNM.25.10_1") %>% report()
 forecast_results <- sarimax_results %>%
   forecast(test_ts_df)
 
-forecast_results %>%
+p1 <- forecast_results %>%
   autoplot(test_ts_df) +
   facet_wrap(~region, ncol = 4, scales = "free_y")
-ggsave("dummy_data/dummy_sarimax_forecast.tiff", width = 15, height = 12)
 
 r2_df <- sarimax_results %>%
   fitted() %>%
@@ -134,12 +134,20 @@ r2_df <- sarimax_results %>%
   left_join(
     train_ts_df %>% slice_head(n = -4, by = region) %>% select(region, date, n)
   )
-# group_by(region) %>%
-# summarise(r2 = cor(.fitted, n)^2)
 
-r2_df %>%
+p2 <- r2_df %>%
   ggplot(aes(x = n, y = .fitted)) +
   geom_point() +
   geom_smooth(method = "lm") +
   facet_wrap(~region, ncol = 4, scales = "free")
-ggsave("dummy_data/dummy_forecast_r2.tiff", width = 15, height = 12)
+combined_plot <- (p1 / p2) + plot_annotation(tag_levels = "a")
+
+ggsave(
+  filename = "FigS3.tiff",
+  plot = combined_plot,
+  width = 15,
+  height = 24,
+  units = "in",
+  dpi = 300,
+  compression = "lzw"  # recommended for TIFFs
+)
